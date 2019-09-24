@@ -4,7 +4,7 @@ before:
 builds:
   -
     goos: [linux, darwin, windows]
-    goarch: [386, amd64, arm, arm64]
+    goarch: [amd64, arm64]
     flags:
       - "-a"
     ldflags:
