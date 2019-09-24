@@ -7,11 +7,11 @@ workflows:
   main:
     jobs:
       - moul/golang-build:
-          gopkg: moul.io/golang-repo-template
+          gopkg: moul.io/hacker-typing
       - moul/golang-build:
-          gopkg: moul.io/golang-repo-template
+          gopkg: moul.io/hacker-typing
           tag: '1.12'
       - moul/golang-build:
-          gopkg: moul.io/golang-repo-template
+          gopkg: moul.io/hacker-typing
           tag: '1.11'
       - moul/docker-build

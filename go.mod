@@ -1,3 +1,3 @@
-module moul.io/golang-repo-template
+module moul.io/hacker-typing
 
 go 1.13
