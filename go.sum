@@ -2,3 +2,5 @@ github.com/eiannone/keyboard v0.0.0-20190314115158-7169d0afeb4f h1:UnS2RJ1y4KXbu
 github.com/eiannone/keyboard v0.0.0-20190314115158-7169d0afeb4f/go.mod h1:Xoiu5VdKMvbRgHuY7+z64lhu/7lvax/22nzASF6GrO8=
 golang.org/x/sys v0.0.0-20190924135425-2f72d4f06240 h1:iLpJnvIAms/C7g3q9Gqq14Nuo4BOdygHa5TfyO3MzEE=
 golang.org/x/sys v0.0.0-20190924135425-2f72d4f06240/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20191010194322-b09406accb47 h1:/XfQ9z7ib8eEJX2hdgFTZJ/ntt0swNk5oYBziWeTCvY=
+golang.org/x/sys v0.0.0-20191010194322-b09406accb47/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
