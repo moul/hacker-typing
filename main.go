@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -8,46 +9,68 @@ import (
 	"os"
 
 	"github.com/eiannone/keyboard"
+	"github.com/peterbourgon/ff/v3/ffcli"
 )
 
-var speed = flag.Int("speed", 1, "characters per keypress")
+var (
+	fs    = flag.NewFlagSet("hacker-typing", flag.ExitOnError)
+	speed = fs.Int("speed", 1, "characters per keypress")
+)
 
 func main() {
-	flag.Parse()
-	args := flag.Args()
+	err := run(os.Args)
+	if err != nil && err != flag.ErrHelp {
+		log.Fatalf("error: %v", err)
+	}
 
-	log.SetFlags(0)
+}
+
+func run(osArgs []string) error {
+	root := &ffcli.Command{
+		ShortUsage: "hacker-typing [flags] <file>",
+		ShortHelp:  "impress your friends",
+		FlagSet:    fs,
+		Exec:       hackerTypingSimulator,
+	}
+	return root.ParseAndRun(context.Background(), osArgs[1:])
+}
+
+func hackerTypingSimulator(ctx context.Context, args []string) error {
 	if len(args) < 1 {
-		log.Print("usage: hacker-typing [flags] path/to/file")
-		os.Exit(1)
+		return flag.ErrHelp
 	}
 
-	f, err := os.Open(args[0])
-	if err != nil {
-		log.Fatal(err)
+	// open source file
+	var content []byte
+	{
+		f, err := os.Open(args[0])
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+		content, err = ioutil.ReadAll(f)
+		if err != nil {
+			return err
+		}
 	}
 
-	content, err := ioutil.ReadAll(f)
-	if err != nil {
-		log.Fatal(err)
+	// init keyboard
+	{
+		if err := keyboard.Open(); err != nil {
+			return err
+		}
+		defer keyboard.Close()
 	}
-
-	if err := keyboard.Open(); err != nil {
-		log.Fatal(err)
-	}
-	defer keyboard.Close()
-
 	i := 0
-forLoop:
 	for {
 		_, key, err := keyboard.GetKey()
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		switch key {
 		case keyboard.KeyEsc, keyboard.KeyCtrlC:
 			fmt.Println() // newline
-			break forLoop
+			return nil
 		default:
 			for j := 0; j < *speed; j++ {
 				if i < len(content) {
