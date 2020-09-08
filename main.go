@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -9,14 +10,19 @@ import (
 	"github.com/eiannone/keyboard"
 )
 
+var speed = flag.Int("speed", 1, "characters per keypress")
+
 func main() {
+	flag.Parse()
+	args := flag.Args()
+
 	log.SetFlags(0)
-	if len(os.Args) < 2 {
-		log.Print("usage: hacker-typing path/to/file")
+	if len(args) < 1 {
+		log.Print("usage: hacker-typing [flags] path/to/file")
 		os.Exit(1)
 	}
 
-	f, err := os.Open(os.Args[1])
+	f, err := os.Open(args[0])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,9 +46,11 @@ func main() {
 		if key == keyboard.KeyEsc {
 			break
 		}
-		if i < len(content) {
-			fmt.Printf("%c", content[i])
+		for j := 0; j < *speed; j++ {
+			if i < len(content) {
+				fmt.Printf("%c", content[i])
+			}
+			i++
 		}
-		i++
 	}
 }
