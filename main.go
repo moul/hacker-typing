@@ -38,19 +38,24 @@ func main() {
 	defer keyboard.Close()
 
 	i := 0
+forLoop:
 	for {
 		_, key, err := keyboard.GetKey()
 		if err != nil {
 			log.Fatal(err)
 		}
-		if key == keyboard.KeyEsc {
-			break
-		}
-		for j := 0; j < *speed; j++ {
-			if i < len(content) {
-				fmt.Printf("%c", content[i])
+		switch key {
+		case keyboard.KeyEsc, keyboard.KeyCtrlC:
+			fmt.Println() // newline
+			break forLoop
+		default:
+			for j := 0; j < *speed; j++ {
+				if i < len(content) {
+					fmt.Printf("%c", content[i])
+				}
+				i++
+				// FIXME: add an option to quit or to loop at the end of the file
 			}
-			i++
 		}
 	}
 }
