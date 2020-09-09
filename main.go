@@ -6,15 +6,19 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
+	"time"
 
 	"github.com/eiannone/keyboard"
 	"github.com/peterbourgon/ff/v3/ffcli"
 )
 
 var (
-	fs    = flag.NewFlagSet("hacker-typing", flag.ExitOnError)
-	speed = fs.Int("speed", 1, "characters per keypress")
+	fs          = flag.NewFlagSet("hacker-typing", flag.ExitOnError)
+	speed       = fs.Int("speed", 1, "characters per keypress")
+	autotypeMin = fs.Duration("autotype-min", 0, "autotype min duration")
+	autotypeMax = fs.Duration("autotype-max", 0, "autotype max duration (suggested value: 200ms)")
 )
 
 func main() {
@@ -36,6 +40,9 @@ func run(osArgs []string) error {
 }
 
 func hackerTypingSimulator(ctx context.Context, args []string) error {
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
 	if len(args) < 1 {
 		return flag.ErrHelp
 	}
@@ -54,30 +61,61 @@ func hackerTypingSimulator(ctx context.Context, args []string) error {
 		}
 	}
 
+	// writing routine
+	writeCh := make(chan int, 0)
+	go func() {
+		pos := 0
+		for {
+			select {
+			case n := <-writeCh:
+				for n > 0 {
+					if pos >= len(content) { // loop
+						pos = 0
+					}
+					fmt.Printf("%c", content[pos])
+					pos++
+					n--
+				}
+			case <-ctx.Done():
+				fmt.Println() // newline
+				return
+			}
+		}
+	}()
+
+	// autotype
+	if *autotypeMin >= 0 && *autotypeMax >= *autotypeMin {
+		go func() {
+			writeCh <- 1 // immediately type a char
+			for {
+				duration := float64(*autotypeMin) + rand.Float64()*(float64(*autotypeMax)-float64(*autotypeMin))
+				select {
+				case <-ctx.Done():
+					return
+				case <-time.After(time.Duration(duration)):
+					writeCh <- 1
+				}
+			}
+		}()
+	}
+
 	// init keyboard
 	{
 		if err := keyboard.Open(); err != nil {
 			return err
 		}
 		defer keyboard.Close()
-	}
-	i := 0
-	for {
-		_, key, err := keyboard.GetKey()
-		if err != nil {
-			return err
-		}
-		switch key {
-		case keyboard.KeyEsc, keyboard.KeyCtrlC:
-			fmt.Println() // newline
-			return nil
-		default:
-			for j := 0; j < *speed; j++ {
-				if i < len(content) {
-					fmt.Printf("%c", content[i])
-				}
-				i++
-				// FIXME: add an option to quit or to loop at the end of the file
+		for {
+			_, key, err := keyboard.GetKey()
+			if err != nil {
+				return err
+			}
+			switch key {
+			case keyboard.KeyEsc, keyboard.KeyCtrlC:
+				cancel()
+				return nil
+			default:
+				writeCh <- *speed
 			}
 		}
 	}
