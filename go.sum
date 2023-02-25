@@ -5,7 +5,7 @@ github.com/eiannone/keyboard v0.0.0-20200508000154-caf4b762e807/go.mod h1:Xoiu5V
 github.com/pelletier/go-toml v1.6.0/go.mod h1:5N711Q9dKgbdkxHL+MEfF31hpT7l0S0s/t2kKREewys=
 github.com/peterbourgon/ff/v3 v3.0.0 h1:eQzEmNahuOjQXfuegsKQTSTDbf4dNvr/eNLrmJhiH7M=
 github.com/peterbourgon/ff/v3 v3.0.0/go.mod h1:UILIFjRH5a/ar8TjXYLTkIvSvekZqPm5Eb/qbGk6CT0=
-golang.org/x/sys v0.0.0-20200908134130-d2e65c121b96 h1:gJciq3lOg0eS9fSZJcoHfv7q1BfC6cJfnmSSKL1yu3Q=
-golang.org/x/sys v0.0.0-20200908134130-d2e65c121b96/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.1.0 h1:kunALQeHf1/185U1i0GOB/fy1IPRDDpuoOOqRReG57U=
+golang.org/x/sys v0.1.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v2 v2.2.4/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
